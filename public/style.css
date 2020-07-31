@@ -1,5 +1,11 @@
 /* this file is loaded by index.html and styles the page */
 
+
+@font-face {
+  font-family: DusterAB;
+  src: url("https://cdn.glitch.com/9e86cccd-74b9-41a9-8f8a-8e687849bad2%2FDuster%20Regular.ttf?v=1596217777007");
+}
+
 * {
   box-sizing: border-box;
 }
@@ -9,6 +15,7 @@ body {
   
   padding : 0 !important;
   margin: 0 !important;
+  line-height: 0;
 }
 
 .backdrop {
@@ -28,33 +35,56 @@ header {
   justify-content: center;
 }
 
+.center-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.center-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .header-items {
   width: 100%;
   max-width: 640px;
 
   height: auto;
   
-  
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  
-  background-color: rgba(255, 255, 255, .3);
+  padding: 24px 0px;
+
+  background-color: rgba(255, 255, 255, .167);
   backdrop-filter: blur(5px);
 }
 
+.header-title {
+  text-align: center;
+  padding: 24px 0;
+  
+  width: 50%;
+  height: auto;
+}
+
+.header-title h3 {
+  /*text-align: justify !important;*/
+}
+
 h1 {
+  font-family: DusterAB;
+  font-size: 5em;
   font-style: bold;
+  color: lightgreen;
   max-width: calc(100% - 5rem);
-  line-height: 1.1;
 }
 
 h3 {
-  font-style: italic;
+  font-style: normal;
   font-weight: normal;
-  color: green;
+  
+  color: lightyellow;
 }
 
 footer {
@@ -71,7 +101,7 @@ footer {
   height: 64px !important;
 }
 
-img .grayscale
+.grayscale
 {
   filter: grayscale(100%);
 }
