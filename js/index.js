@@ -8,13 +8,19 @@ const AVATAR_COUNT = 640;
 
 var DOM_gallery;
 
+var DOM_avatar_name;
+var DOM_avatar_location;
+var DOM_avatar_icon;
+
 window.addEventListener('load', (event) => 
 {
   return;
   
   DOM_gallery = document.getElementById("gallery");
-  for(var i = 0; i < AVATAR_COUNT; i++)
-    addAvatar();
+  DOM_avatar
+  
+//for(var i = 0; i < AVATAR_COUNT; i++)
+  //  addAvatar();
 });
 
 
