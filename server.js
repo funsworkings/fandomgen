@@ -10,17 +10,12 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 
 
+var avatars = [];
+
 // make all the files in 'public' available
 // https://expressjs.com/en/starter/static-files.html
 app.use(express.static("public"));
 app.use(express.static("js"));
-
-const _URL = process.env.SRC_URL;
-
-var scrape_images = function()
-{
-  console.log(_URL);
-}
 
 async function fetchHTML(url) {
   const { data } = await axios.get(url)
@@ -28,24 +23,23 @@ async function fetchHTML(url) {
 }
 
 const ROOT = process.env.SRC_ROOT;
-const PATH = path.join(ROOT, process.env.SRC_PATH);
+const PATH = ROOT + "/" + process.env.SRC_PATH;
 
 async function scrape(){
-  var images = [];
   
-  const $ = await fetchHTML(PATH)
+  avatars = []; // wipe avatars on scrape
+  
+  const $ = await fetchHTML(PATH);
 
-    $('img').filter(function(i)
-    {
-      return $(this).attr("src").includes("sheet_icons");
-    }).each(function(i, element){
-      var src = $(element).attr("src");
-      console.log(src);
-      
-      images.push( path.join(ROOT, src );
-    });
-  
-  return images;
+  $('img').filter(function(i)
+  {
+    return $(this).attr("src").includes("sheet_icons");
+  }).each(function(i, element){
+    var src = $(element).attr("src");
+    console.log(src);
+
+    avatars.push(ROOT + src);
+  });
   
   // Print the full HTML
   //console.log(`Site HTML: ${$.html()}\n\n`)
@@ -64,9 +58,12 @@ app.get("/", (request, response) =>
   scrape();
 });
 
-app.get("/avatar", (request, response) => 
+app.get("/avatar", async function(request, response)
 {
-    //response.sendFile()
+    if(avatars.length == 0)
+      await scrape();
+    
+    var avi = a
 });
 
 // listen for requests :)
