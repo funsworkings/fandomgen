@@ -29,10 +29,9 @@ async function fetchHTML(url) {
 async function scrape(){
   const $ = await fetchHTML("https://www.models-resource.com/search/?q=a*&c=2&o%5B%5D=s")
 
-    $('div.iconbody').each(function(i, element){
-      var src = $('img').attr("src");
-      console.log('hey');
-
+    $('img').each(function(i, element){
+      var src = $(element).attr("src");
+      console.log(src);
     });
   
   // Print the full HTML
