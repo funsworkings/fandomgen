@@ -1,4 +1,4 @@
-import 
+import { getRandomInt } from './helpers.js';
 
 var first_names = [
   "doug",
@@ -39,8 +39,17 @@ var Sim = function()
   var fears = [];
 }
 
-Sim.prototype.randomize = function(){
-  var fi = first_names[getRandomInt(first_names.length)];
-  
-  this.first_name = f
+Sim.prototype.randomize = function()
+{
+  this.first_name = first_names[getRandomInt(first_names.length)];
+  this.last_name = last_names[getRandomInt(last_names.length)];
 }
+
+Sim.prototype.print = function()
+{
+  console.log(this.first_name + " " + this.last_name);
+}
+
+
+
+export { Sim };
