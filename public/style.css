@@ -11,6 +11,11 @@ body {
   margin: 0 !important;
 }
 
+header {
+  width:100%;
+  height: auto;
+}
+
 .header-copy {
   text-align: center;
   display: flex;
@@ -32,6 +37,9 @@ h3 {
 }
 
 footer {
+  width:100%;
+  height: auto;
+  
   margin-top: 3em;
   padding-top: 1.5em;
   border-top: 1px solid lightgrey;
