@@ -49,9 +49,6 @@ async function scrape(){
   //console.log(`First h1 tag: ${$('h1').text()}`)
 }
 
-
-
-
 // https://expressjs.com/en/starter/basic-routing.html
 app.get("/", (request, response) => 
 {

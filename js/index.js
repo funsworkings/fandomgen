@@ -21,6 +21,9 @@ var addAvatar = function()
 {
   $.get("random_avatar", function(data, status){
     
+    if(!DOM_gallery)
+      return;
+    
     console.log("received = " + data);
     var el = document.createElement("IMG");
     el.src = data;
