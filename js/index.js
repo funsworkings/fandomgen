@@ -12,30 +12,34 @@ var DOM_avatar_name;
 var DOM_avatar_location;
 var DOM_avatar_icon;
 
-window.addEventListener('load', (event) => 
-{
-  return;
-  
-  DOM_gallery = document.getElementById("gallery");
-  DOM_avatar
-  
-//for(var i = 0; i < AVATAR_COUNT; i++)
-  //  addAvatar();
-});
 
-
-var addAvatar = function()
+var fetchAvatar = function()
 {
   $.get("random_avatar", function(data, status){
     
-    if(!DOM_gallery)
-      return;
-    
     console.log("received = " + data);
-    var el = document.createElement("IMG");
-    el.src = data;
-    el.className = "avatar-item";
+    DOM_avatar_icon.setAttribute('src', data);
     
-    DOM_gallery.appendChild(el);
+   // var el = document.createElement("IMG");
+     // el.src = data;
+      //el.className = "avatar-item";
+    
+    
+    
+    //DOM_gallery.appendChild(el);
   });
 }
+
+
+window.addEventListener('load', (event) => 
+{
+  DOM_gallery = document.getElementById("gallery");
+  
+  DOM_avatar_icon = document.getElementById("avatar-icon");
+  DOM_avatar_name = document.getElementById("avatar-name");
+  DOM_avatar_location = document.getElementById("avatar-location");
+  
+//for(var i = 0; i < AVATAR_COUNT; i++)
+  //  addAvatar();
+  fetchAvatar();
+});
