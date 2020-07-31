@@ -52,4 +52,4 @@ Sim.prototype.print = function()
 
 
 
-export { Sim };
+module.exports = { Sim };

@@ -11,7 +11,7 @@ var generate = function()
   return sim;
 };
 
-var generateAll = function(amount)
+export var generateAll = function(amount)
 {
   for(var i = 0; i < amount; i++)
   {
@@ -21,5 +21,3 @@ var generateAll = function(amount)
     console.log("generated -> " + sim.print());
   }
 }
-
-export {}
