@@ -31,6 +31,16 @@ body {
   z-index: -99 !important;
 }
 
+.avatar-gallery {
+  width: 100%;
+  height: auto;
+}
+
+.avatar-item {
+  width: 96px;
+  height: 96px;
+}
+
 header {
   width:100%;
   margin: 0 auto;
@@ -102,7 +112,7 @@ h3 {
 .main-items 
 {
   width: 67%;
-  height: 640px;
+  height: auto;
 }
 
 footer {

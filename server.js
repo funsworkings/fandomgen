@@ -64,7 +64,8 @@ app.get("/random_avatar", async function(request, response)
     if(avatars.length == 0)
     await scrape();
     
-    var avi = avatars[0];
+    var ind = random.int(0, avatars.length);
+    var avi = avatars[ind];
   
     console.log("sent = " + avi);
     response.send(avi);

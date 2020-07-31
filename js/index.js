@@ -2,10 +2,30 @@
 // run by the browser each time the page is loaded
 console.log("hello world :o");
 
+
+const AVATAR_COUNT = 64;
+
+
+var DOM_gallery;
+
 window.addEventListener('load', (event) => 
 {
-  console.log("tried");
-  $.get("random_avatar", function(data, status){
-    console.log(data);
-  });
+  DOM_gallery = document.getElementById("gallery");
+  
+  for(var i = 0; i < AVATAR_COUNT; i++)
+    addAvatar();
 });
+
+
+var addAvatar = function()
+{
+  $.get("random_avatar", function(data, status){
+    
+    console.log("received = " + data);
+    var el = document.createElement("IMG");
+    el.src = data;
+    el.className = "avatar-item";
+    
+    DOM_gallery.appendChild(el);
+  });
+}
