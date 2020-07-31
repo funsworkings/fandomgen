@@ -5,6 +5,7 @@
 // but feel free to use whatever libraries or frameworks you'd like through `package.json`.
 const express = require("express");
 const path = require("path");
+const random = require("random");
 const app = express();
 const axios = require("axios");
 const cheerio = require("cheerio");
@@ -36,7 +37,7 @@ async function scrape(){
     return $(this).attr("src").includes("sheet_icons");
   }).each(function(i, element){
     var src = $(element).attr("src");
-    console.log(src);
+    //console.log(src);
 
     avatars.push(ROOT + src);
   });
@@ -58,12 +59,15 @@ app.get("/", (request, response) =>
   scrape();
 });
 
-app.get("/avatar", async function(request, response)
+app.get("/random_avatar", async function(request, response)
 {
     if(avatars.length == 0)
-      await scrape();
+    await scrape();
     
-    var avi = a
+    var avi = avatars[0];
+  
+    console.log("sent = " + avi);
+    response.send(avi);
 });
 
 // listen for requests :)
