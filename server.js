@@ -7,10 +7,15 @@ const express = require("express");
 const app = express();
 
 // our default array of dreams
-const dreams = [
-  "Find and count some sheep",
-  "Climb a really tall mountain",
-  "Wash the dishes"
+var dreams = 
+[
+  "rick's dream",
+  "hey east",
+  "blah",
+  "another one btes the dust",
+  "hahahahahahahahahahahahahahahahahahah",
+  "can this be images?",
+  "would be cool to submit images tp the page that get warped"
 ];
 
 // make all the files in 'public' available
