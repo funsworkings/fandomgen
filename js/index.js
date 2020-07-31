@@ -3,7 +3,7 @@
 console.log("hello world :o");
 
 
-const AVATAR_COUNT = 64;
+const AVATAR_COUNT = 640;
 
 
 var DOM_gallery;
