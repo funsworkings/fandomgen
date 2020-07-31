@@ -111,8 +111,10 @@ h3 {
 
 .main-items 
 {
-  width: 67%;
+  width: 87%;
   height: auto;
+  
+  padding: 32px;
 }
 
 footer {
@@ -147,16 +149,29 @@ footer {
   background-color: blue;
 }
 
+.debug-red {
+  background-color: red;
+}
+
 .avatar-profile{
+  width: 100%;
+  height: auto;
   
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
 }
 
 .avatar-profile-icon {
-  
+  width: 256px;
+  height: 256px;
 }
 
 .avatar-profile-bio {
   
+  
+  width: 48px;
+  height: 48px;
 }
 
 .avatar-name {
