@@ -15,6 +15,7 @@ var dreams =
   "another one btes the dust",
   "hahahahahahahahahahahahahahahahahahah",
   "can this be images?",
+  "could b images",
   "would be cool to submit images tp the page that get warped"
 ];
 
@@ -30,6 +31,7 @@ app.get("/", (request, response) => {
 // send the default array of dreams to the webpage
 app.get("/dreams", (request, response) => {
   // express helps us take JS objects and send them as JSON
+  dreams.push("time to sleep for: " + (dreams.length * 10) + "  years")
   response.json(dreams);
 });
 
