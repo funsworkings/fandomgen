@@ -10,8 +10,9 @@ var DOM_gallery;
 
 window.addEventListener('load', (event) => 
 {
-  DOM_gallery = document.getElementById("gallery");
+  return;
   
+  DOM_gallery = document.getElementById("gallery");
   for(var i = 0; i < AVATAR_COUNT; i++)
     addAvatar();
 });

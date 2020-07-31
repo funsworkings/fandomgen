@@ -142,3 +142,27 @@ footer {
   background-color: rgba(255, 255, 255, .167);
   backdrop-filter: blur(5px);
 }
+
+.debug {
+  background-color: blue;
+}
+
+.avatar-profile{
+  
+}
+
+.avatar-profile-icon {
+  
+}
+
+.avatar-profile-bio {
+  
+}
+
+.avatar-name {
+  
+}
+
+.avatar-location {
+  
+}
