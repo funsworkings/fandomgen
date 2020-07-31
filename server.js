@@ -5,7 +5,8 @@
 // but feel free to use whatever libraries or frameworks you'd like through `package.json`.
 const express = require("express");
 const app = express();
-const cheerio = require("cheerio")
+const axios = require("axios");
+const cheerio = require("cheerio");
 
 
 // make all the files in 'public' available
@@ -13,17 +14,42 @@ const cheerio = require("cheerio")
 app.use(express.static("public"));
 app.use(express.static("js"));
 
+const _URL = process.env.SRC_URL;
+
+var scrape_images = function()
+{
+  console.log(_URL);
+}
+
+async function fetchHTML(url) {
+  const { data } = await axios.get(url)
+  return cheerio.load(data)
+}
+
+async function scrape(){
+  const $ = await fetchHTML("https://www.models-resource.com/search/?q=a*&c=2&o%5B%5D=s")
+
+    $('div.iconbody').each(function(i, element){
+      var src = $('img').attr("src");
+      console.log('hey');
+
+    });
+  
+  // Print the full HTML
+  //console.log(`Site HTML: ${$.html()}\n\n`)
+
+  // Print some specific page content
+  //console.log(`First h1 tag: ${$('h1').text()}`)
+}
+
+
+
+
 // https://expressjs.com/en/starter/basic-routing.html
 app.get("/", (request, response) => 
 {
   response.sendFile(__dirname + "/views/index.html");
-});
-
-// send the default array of dreams to the webpage
-app.get("/dreams", (request, response) => {
-  // express helps us take JS objects and send them as JSON
-  dreams.push("time to sleep for: " + (dreams.length * 10) + "  years")
-  response.json(dreams);
+  scrape();
 });
 
 // listen for requests :)
