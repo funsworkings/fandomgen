@@ -13,6 +13,22 @@ const cheerio = require("cheerio");
 
 var avatars = [];
 
+
+const Avatar = function()
+{
+  this.name = "";
+  this.game = "";
+  this.section = "";
+  this.filesize = -1;
+  this.submitter = "";
+  this.format = "";
+  this.hits = -1;
+  this.comments = -1;
+  
+  this.thumbnail = "";
+};
+
+
 // make all the files in 'public' available
 // https://expressjs.com/en/starter/static-files.html
 app.use(express.static("public"));
@@ -25,6 +41,25 @@ async function fetchHTML(url) {
 
 const ROOT = process.env.SRC_ROOT;
 const PATH = ROOT + "/" + process.env.SRC_PATH;
+
+
+
+var CONSOLES = [];
+
+
+async function scrape_consoles() 
+{
+  console.log("SCRAPE CONSOLES!");
+  
+   const $ = await fetchHTML(ROOT);
+   $('a').filter(function(){
+     return $(this).html() == "PlayStation 2";
+   }).each(function(){
+     var href = $(this).attr('href');
+     console.log(href);
+   });
+}
+
 
 async function scrape(){
   
@@ -53,11 +88,14 @@ async function scrape(){
 app.get("/", (request, response) => 
 {
   response.sendFile(__dirname + "/views/index.html");
-  scrape();
 });
 
 app.get("/random_avatar", async function(request, response)
 {
+    await scrape_consoles();
+    response.send("");
+    return;
+  
     if(avatars.length == 0)
     await scrape();
     
