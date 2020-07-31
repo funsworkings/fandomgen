@@ -5,19 +5,8 @@
 // but feel free to use whatever libraries or frameworks you'd like through `package.json`.
 const express = require("express");
 const app = express();
+const cheerio = require("cheerio")
 
-// our default array of dreams
-var dreams = 
-[
-  "rick's dream",
-  "hey east",
-  "blah",
-  "another one btes the dust",
-  "hahahahahahahahahahahahahahahahahahah",
-  "can this be images?",
-  "could b images",
-  "would be cool to submit images tp the page that get warped"
-];
 
 // make all the files in 'public' available
 // https://expressjs.com/en/starter/static-files.html
