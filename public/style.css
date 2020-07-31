@@ -69,7 +69,9 @@ header {
 }
 
 .header-title h3 {
-  /*text-align: justify !important;*/
+  text-align: justify !important;
+  text-justify: inter-word;
+  line-height: .9em;
 }
 
 h1 {
