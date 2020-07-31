@@ -11,10 +11,15 @@ body {
 }
 
 h1 {
-  font-style: italic;
-  color: #373fff;
+  font-style: bold;
   max-width: calc(100% - 5rem);
   line-height: 1.1;
+}
+
+h3 {
+  font-style: italic;
+  font-weight: normal;
+  color: green;
 }
 
 form {
@@ -58,4 +63,9 @@ footer {
 .small_img {
   width: 64px !important;
   height: 64px !important;
+}
+
+img 
+{
+  filter: grayscale(100%);
 }
