@@ -4,6 +4,7 @@
 // we've started you off with Express (https://expressjs.com/)
 // but feel free to use whatever libraries or frameworks you'd like through `package.json`.
 const express = require("express");
+const path = require("path");
 const app = express();
 const axios = require("axios");
 const cheerio = require("cheerio");
@@ -26,13 +27,25 @@ async function fetchHTML(url) {
   return cheerio.load(data)
 }
 
-async function scrape(){
-  const $ = await fetchHTML("https://www.models-resource.com/search/?q=a*&c=2&o%5B%5D=s")
+const ROOT = process.env.SRC_ROOT;
+const PATH = path.join(ROOT, process.env.SRC_PATH);
 
-    $('img').each(function(i, element){
+async function scrape(){
+  var images = [];
+  
+  const $ = await fetchHTML(PATH)
+
+    $('img').filter(function(i)
+    {
+      return $(this).attr("src").includes("sheet_icons");
+    }).each(function(i, element){
       var src = $(element).attr("src");
       console.log(src);
+      
+      images.push( path.join(ROOT, src );
     });
+  
+  return images;
   
   // Print the full HTML
   //console.log(`Site HTML: ${$.html()}\n\n`)
@@ -49,6 +62,11 @@ app.get("/", (request, response) =>
 {
   response.sendFile(__dirname + "/views/index.html");
   scrape();
+});
+
+app.get("/avatar", (request, response) => 
+{
+    //response.sendFile()
 });
 
 // listen for requests :)
