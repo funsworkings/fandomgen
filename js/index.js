@@ -32,7 +32,7 @@ const Avatar = function()
 const AVATAR_COUNT = 640;
 
 
-var DOM_gallery;
+var DOM_avatar_gallery;
 
 var DOM_avatar_name;
 var DOM_avatar_location;
@@ -50,20 +50,23 @@ var fetchAvatar = function()
     DOM_avatar_name.innerHTML = avatar.info.name;
     DOM_avatar_location.innerHTML = avatar.info.game;
     
-   // var el = document.createElement("IMG");
-     // el.src = data;
-      //el.className = "avatar-item";
+    var assets = avatar.assets;
+    for(var i = 0; i < assets.length; i++){
+      var el = document.createElement("IMG");
+      el.src = "./tmp/" + assets[i];
+      el.className = "avatar-item";
+      
+      DOM_avatar_gallery.appendChild(el);
+    }
     
     
-    
-    //DOM_gallery.appendChild(el);
   });
 }
 
 
 window.addEventListener('load', (event) => 
 {
-  DOM_gallery = document.getElementById("gallery");
+  DOM_avatar_gallery = document.getElementById("gallery");
   
   DOM_avatar_icon = document.getElementById("avatar-icon");
   DOM_avatar_name = document.getElementById("avatar-name");

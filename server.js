@@ -52,7 +52,7 @@ const Avatar = function()
 // https://expressjs.com/en/starter/static-files.html
 app.use(express.static("public"));
 app.use(express.static("js"));
-app.use(express.static("tmp"));
+app.use('/tmp', express.static("tmp"));
 
 async function fetchHTML(url) {
   const { data } = await axios.get(url)
@@ -202,16 +202,15 @@ async function read_avatar()
       const type = entry.type; // 'Directory' or 'File'
       const size = entry.vars.uncompressedSize; // There is also compressedSize;
       
-      console.log(fileName);
-      assets.push(fileName);
-      
-      if(fileName.includes(".png"))
+      if(fileName.includes(".png") || fileName.includes(".jpg"))
       {
         var path_s = fileName.split('\/');
         var path = path_s[path_s.length-1];
         
+        assets.push(path);
         entry.pipe(fs.createWriteStream(__dirname + '/tmp/' + path));
-        console.log("wrote=" + fileName);
+        
+        console.log("wrote= " + path);
       }
       else
         entry.autodrain();
