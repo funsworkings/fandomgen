@@ -13,18 +13,21 @@ const cheerio = require("cheerio");
 
 var avatars = [];
 
-
-const Avatar = function()
+const Avatar_Info = function()
 {
   this.name = "";
   this.game = "";
   this.section = "";
-  this.filesize = -1;
+  this.filesize = "";
   this.submitter = "";
   this.format = "";
-  this.hits = -1;
-  this.comments = -1;
-  
+  this.hits = "";
+  this.comments = "";
+}
+
+const Avatar = function()
+{
+  this.info = Object.create(Avatar_Info.prototype);
   this.thumbnail = "";
 };
 
@@ -62,6 +65,24 @@ async function scrape_root()
    });
 }
 
+
+function parse_avatar_info($, info_container){
+  var info = Object.create(Avatar_Info.prototype);
+  
+  info_container.each((i, el) => {
+      
+      var html = $(el).html();
+      if(html == "Game")
+      {
+        html = $(el).next().html();
+        console.log(html + "!");
+      }
+      
+  });
+  
+  return "";
+}
+
 async function scrape_model(model)
 {
   console.log("scrape = " + model);
@@ -71,8 +92,19 @@ async function scrape_model(model)
   
   
   const info = $("#game-info-wrapper").first();
-  const categories = info.find($('tr')).each(() => {
-    console.log($(this));
+  const categories = info.find($('tr')).filter((i, el) => {
+    
+    var classname = $(el).attr('class');
+    if(classname)
+      return classname.includes('altrow');
+    
+    return false;
+    
+  }).each((i, el) => {
+    
+    var children = $(el).find('td');
+    var info = parse_avatar_info($, children);
+    
   });
   
   
