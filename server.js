@@ -207,7 +207,7 @@ async function read_avatar()
       
       if(fileName.includes(".png"))
       {
-        var path_s = fileName.split('/');
+        var path_s = fileName.split('\/');
         var path = path_s[path_s.length-1];
         
         entry.pipe(fs.createWriteStream(__dirname + '/tmp/' + path));
