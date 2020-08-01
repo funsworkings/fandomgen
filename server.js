@@ -325,10 +325,10 @@ async function fetch_wiki(avatar)
 async function scrape_wiki(wiki, avatar)
 {
   var $ = await fetchHTML(wiki);
-  const search_game = avatar.query_game();
+  const search_game = avatar.query_name();
   
   var gamepedia = wiki.includes("gamepedia");
-  var query = wiki + `/wiki/Special:Search?scope=internal&query=${search_game}&ns%5B0%5D=6&filter=imageOnly`;
+  var query = wiki + `wiki/Special:Search?search=${search_game}&fulltext=Search&scope=internal&ns6=1&filters%5B%5D=is_image#`;
   
   if(gamepedia)
   {
@@ -344,8 +344,17 @@ async function scrape_wiki(wiki, avatar)
   }
   else //Fandom
   {
+    console.log("scrape wiki= " + query);
     $ = await fetchHTML(query);
     
+    var results = $('.Results').first();
+    if(results){
+      var _results = $(results).find($('.result'))
+      .find($('img')).each((i, el) => {
+          var src = $(el).attr('src');
+          console.log('fandom src= ' + src);
+      });
+    }
   }
 }
 
