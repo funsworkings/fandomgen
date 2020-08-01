@@ -72,12 +72,16 @@ Avatar.prototype.query_game = function(){
      for(var i = 0; i < arr.length; i++)
      {
        var c = arr[i];
+       var r = "";
+       
        if(c == ' ')
-         c = '+';
+         r += "+";
        else if(!alphanumeric(c))
-         c = ascii_to_hex(c);
+         r += `%${ascii_to_hex(c)}`;
+       else
+         r += c;
           
-       query.push(c);
+       query.push(r);
      }
     
      var result = query.join('');
@@ -95,27 +99,20 @@ var CURRENT_AVATAR = Object.create(Avatar.prototype);
 
 function ascii_to_hex(str)
 {
-    var arr1 = [];
-    for (var n = 0, l = str.length; n < l; n ++) 
-    {
-      var hex = Number(str.charCodeAt(n)).toString(16);
-      arr1.push(hex);
+    var hex = "";
+    for(var i = 0; i < str.length; i++){
+      hex += str.charCodeAt(i).toString(16);
     }
   
-    return arr1.join('');
- }
+    return hex;
+}
 
-function alphanumeric(inputtxt)
+function alphanumeric(input)
 { 
-  var letters = '/^[a-z0-9]+$/i';
-  if(inputtxt.match(letters))
-  {
-    return true;
-  }
-  else
-  {
-    return false;
-  }
+  var patt = /^[a-z0-9]+$/i;
+  var regex = new RegExp(patt);
+  
+  return regex.test(input);
 }
 
 
@@ -314,9 +311,18 @@ async function fetch_wiki(avatar)
      return href;
    }
   
-  return "test";
+  return null;
 }
 
+async function scrape_wiki(wiki)
+{
+  const $ = await fetchHTML(wiki);
+  var gamepedia = wiki.includes("gamepedia");
+  
+  if(gamepedia){
+    
+  }
+}
 
 // ROUTES!
 
