@@ -27,6 +27,9 @@ else
   wipe_temp();
 
 
+
+
+
 var avatars = [];
 
 const Avatar_Info = function()
@@ -59,8 +62,31 @@ Avatar.prototype.isvalid = function()
   return this.name && this.name != "";
 }
 
+Avatar.prototype.query_game = function(){
+  var game = this.game;
+  if(game) 
+  {
+     return game.split(' ').join('+');
+  }
+  
+  return "";
+}
+
 var CURRENT_AVATAR = Object.create(Avatar.prototype);
 
+
+
+function ascii_to_hex(str)
+{
+    var arr1 = [];
+    for (var n = 0, l = str.length; n < l; n ++) 
+    {
+      var hex = Number(str.charCodeAt(n)).toString(16);
+      arr1.push(hex);
+    }
+  
+    return arr1.join('');
+ }
 
 
 // make all the files in 'public' available
@@ -246,10 +272,19 @@ async function read_avatar()
     return assets;
 }
 
-async function fetch_wiki(game)
+async function fetch_wiki(avatar)
 {
-   var PATH = PATH_WIKI
+   var PATH = PATH_WIKI + `/?s=avatar.query_game()`;
    const $ = await fetchHTML(PATH);
+  
+   var topresult = $('.top-community-content').first();
+   if(topresult)
+   {
+     var href = $(topresult).attr('href');
+     return href;
+   }
+  
+  return "";
 }
 
 
@@ -287,10 +322,10 @@ app.get("/random_avatar", async function(request, response)
     avatar = await scrape_avatar(avatar); // unzip contents
     CURRENT_AVATAR = avatar;
   
-    if(CURRENT_AVATAR && CURRENT_AVATAR.name && CURRENT_AVATAR.name != "")
+    if(CURRENT_AVATAR)
     {
-      var game = avatar.game;
-      var wiki_url = await fetch_wiki(game);
+      var wiki_url = await fetch_wiki(avatar);
+      console.log(wiki_url);
     }
   
     const payload = JSON.stringify(avatar);
