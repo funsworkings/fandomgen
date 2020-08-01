@@ -102,6 +102,11 @@ async function scrape_model(model)
   var information = Object.create(Avatar_Info.prototype);
   
   const info = $("#game-info-wrapper").first();
+  
+  const name = info.find($('.rowheader')).each((i, el) => {
+    console.log(el);
+  });
+  
   const categories = info.find($('tr')).filter((i, el) => {
     
     var classname = $(el).attr('class');
