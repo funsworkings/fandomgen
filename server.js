@@ -63,12 +63,29 @@ Avatar.prototype.isvalid = function()
 }
 
 Avatar.prototype.query_game = function(){
-  var game = this.game;
+  var game = this.info.game;
   if(game) 
   {
-     return game.split(' ').join('+');
+     var arr = game.split('');
+     var query = [];
+    
+     for(var i = 0; i < arr.length; i++)
+     {
+       var c = arr[i];
+       if(c == ' ')
+         c = '+';
+       else if(!alphanumeric(c))
+         c = ascii_to_hex(c);
+          
+       query.push(c);
+     }
+    
+     var result = query.join('');
+    console.log("result = " + result);
+     return result;
   }
   
+  console.log("fail");
   return "";
 }
 
@@ -87,6 +104,19 @@ function ascii_to_hex(str)
   
     return arr1.join('');
  }
+
+function alphanumeric(inputtxt)
+{ 
+  var letters = '/^[a-z0-9]+$/i';
+  if(inputtxt.match(letters))
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
 
 
 // make all the files in 'public' available
@@ -274,7 +304,7 @@ async function read_avatar()
 
 async function fetch_wiki(avatar)
 {
-   var PATH = PATH_WIKI + `/?s=avatar.query_game()`;
+   var PATH = PATH_WIKI + `/?s=${avatar.query_game()}`;
    const $ = await fetchHTML(PATH);
   
    var topresult = $('.top-community-content').first();
@@ -284,7 +314,7 @@ async function fetch_wiki(avatar)
      return href;
    }
   
-  return "";
+  return "test";
 }
 
 
