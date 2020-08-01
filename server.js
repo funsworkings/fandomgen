@@ -62,35 +62,20 @@ Avatar.prototype.isvalid = function()
   return this.name && this.name != "";
 }
 
+Avatar.prototype.query_name = function(){
+  var name = this.info.name;
+  if(name) 
+     return convert_to_query(name);
+  
+  return null;
+}
+
 Avatar.prototype.query_game = function(){
   var game = this.info.game;
   if(game) 
-  {
-     var arr = game.split('');
-     var query = [];
-    
-     for(var i = 0; i < arr.length; i++)
-     {
-       var c = arr[i];
-       var r = "";
-       
-       if(c == ' ')
-         r += "+";
-       else if(!alphanumeric(c))
-         r += `%${ascii_to_hex(c)}`;
-       else
-         r += c;
-          
-       query.push(r);
-     }
-    
-     var result = query.join('');
-    console.log("result = " + result);
-     return result;
-  }
+     return convert_to_query(game);
   
-  console.log("fail");
-  return "";
+  return null;
 }
 
 var CURRENT_AVATAR = Object.create(Avatar.prototype);
@@ -113,6 +98,29 @@ function alphanumeric(input)
   var regex = new RegExp(patt);
   
   return regex.test(input);
+}
+
+function convert_to_query(str){
+  var arr = str.split('');
+  var query = [];
+    
+   for(var i = 0; i < arr.length; i++)
+   {
+     var c = arr[i];
+     var r = "";
+
+     if(c == ' ')
+       r += "+";
+     else if(!alphanumeric(c))
+       r += `%${ascii_to_hex(c)}`;
+     else
+       r += c;
+
+     query.push(r);
+   }
+    
+   var result = query.join('');
+   return result;
 }
 
 
@@ -314,12 +322,29 @@ async function fetch_wiki(avatar)
   return null;
 }
 
-async function scrape_wiki(wiki)
+async function scrape_wiki(wiki, avatar)
 {
-  const $ = await fetchHTML(wiki);
-  var gamepedia = wiki.includes("gamepedia");
+  var $ = await fetchHTML(wiki);
+  const search_game = avatar.query_game();
   
-  if(gamepedia){
+  var gamepedia = wiki.includes("gamepedia");
+  var query = wiki + `/wiki/Special:Search?scope=internal&query=${search_game}&ns%5B0%5D=6&filter=imageOnly`;
+  
+  if(gamepedia)
+  {
+    query = wiki + `/index.php?search=${search_game}&title=Special%3ASearch&profile=images&fulltext=1`;
+    $ = await fetchHTML(query);
+    
+    var results = $('.search-results')
+    .find($('.searchresultImage'))
+    .find($('img')).each((i, el) => {
+      var src = $(el).attr('src');
+      console.log('gamepedia src= ' + src);
+    });
+  }
+  else //Fandom
+  {
+    $ = await fetchHTML(query);
     
   }
 }
@@ -361,7 +386,13 @@ app.get("/random_avatar", async function(request, response)
     if(CURRENT_AVATAR)
     {
       var wiki_url = await fetch_wiki(avatar);
-      console.log(wiki_url);
+      console.log("found wiki= " + wiki_url);
+      
+      if(wiki_url)
+      {
+        var assets = await scrape_wiki(wiki_url, avatar);
+        
+      }
     }
   
     const payload = JSON.stringify(avatar);
