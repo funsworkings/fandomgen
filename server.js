@@ -53,7 +53,13 @@ async function scrape_consoles()
   
    const $ = await fetchHTML(ROOT);
    $('a').filter(function(){
-     return $(this).html() == "PlayStation 2";
+     var innerhtml = $(this).html();
+     var innerhtml_format = innerhtml.toLowerCase().replace(' ', '_');
+     
+     var href = $(this).attr('href');
+     console.log(href);
+     
+     return (innerhtml_format == href);
    }).each(function(){
      var href = $(this).attr('href');
      console.log(href);
