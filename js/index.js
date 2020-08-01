@@ -54,12 +54,19 @@ var fetchAvatar = function()
     
     var assets = avatar.assets;
     for(var i = 0; i < assets.length; i++){
-      var path = "./tmp/" + assets[i];
+      var path = "";
+      
+      var asset = assets[i];
+      if(asset.includes("http"))
+        path = asset;
+      else
+        path = "./tmp/" + asset;
       
       if(i == 0)
         DOM_avatar_backdrop.style.backgroundImage = `url(${path}`;
       else {
         var el = document.createElement("IMG");
+        
         el.src = path;
         el.className = "avatar-item";
 
