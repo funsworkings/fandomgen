@@ -7,6 +7,7 @@ const express = require("express");
 const path = require("path");
 const random = require("random");
 const app = express();
+const fs = require("fs");
 const axios = require("axios");
 const cheerio = require("cheerio");
 

@@ -45,7 +45,9 @@ var fetchAvatar = function()
     var avatar = JSON.parse(data); // parse out avatar object
     console.log("received => " + data);
     
-    DOM_avatar_icon.setAttribute('src', data);
+    DOM_avatar_icon.setAttribute('src', avatar.thumbnail);
+    DOM_avatar_name.innerHTML = avatar.info.name;
+    DOM_avatar_location.innerHTML = avatar.info.game;
     
    // var el = document.createElement("IMG");
      // el.src = data;
