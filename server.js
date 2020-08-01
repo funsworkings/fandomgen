@@ -18,7 +18,7 @@ const ROOT = process.env.SRC_ROOT;
 const PATH = ROOT + "/" + process.env.SRC_PATH;
 const TMP = path.join(__dirname, "tmp");
 
-
+const PATH_WIKI = "https://www.fandom.com";
 
 var dir = './tmp'; // Setup temp directory
 if (!fs.existsSync(dir))
@@ -53,6 +53,14 @@ const Avatar = function()
   this.zip = "";
   this.assets = [];
 };
+
+Avatar.prototype.isvalid = function()
+{
+  return this.name && this.name != "";
+}
+
+var CURRENT_AVATAR = Object.create(Avatar.prototype);
+
 
 
 // make all the files in 'public' available
@@ -238,6 +246,11 @@ async function read_avatar()
     return assets;
 }
 
+async function fetch_wiki(game)
+{
+   var PATH = PATH_WIKI
+   const $ = await fetchHTML(PATH);
+}
 
 
 // ROUTES!
@@ -257,7 +270,9 @@ app.get("/random_avatar", async function(request, response)
     console.log("Found " + MODELS_ROOT.length + " models in ROOT!");
   
     var model = MODELS_ROOT[random.int(0, MODELS_ROOT.length)];
+  
     var avatar = Object.create(Avatar.prototype);
+    CURRENT_AVATAR = null; // Wipe last avatar
   
     await scrape_model(model, avatar);
   
@@ -270,6 +285,13 @@ app.get("/random_avatar", async function(request, response)
       avatar.zip = ROOT + zip;
   
     avatar = await scrape_avatar(avatar); // unzip contents
+    CURRENT_AVATAR = avatar;
+  
+    if(CURRENT_AVATAR && CURRENT_AVATAR.name && CURRENT_AVATAR.name != "")
+    {
+      var game = avatar.game;
+      var wiki_url = await fetch_wiki(game);
+    }
   
     const payload = JSON.stringify(avatar);
     console.log(payload);
