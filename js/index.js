@@ -2,6 +2,31 @@
 // run by the browser each time the page is loaded
 console.log("hello world :o");
 
+/* * * * * * * * * * * * * * * * * * * */
+
+const Avatar_Info = function()
+{
+  this.name = "";
+  this.game = "";
+  this.section = "";
+  this.filesize = "";
+  this.submitter = "";
+  this.format = "";
+  this.hits = "";
+  this.comments = "";
+}
+
+Avatar_Info.prototype.print = function(){
+  console.log("name= " + this.name + "  game= " + this.game + "  filesize= " + this.filesize + "  hits=" + this.hits);
+}
+
+const Avatar = function()
+{
+  this.info = Object.create(Avatar_Info.prototype);
+  this.thumbnail = "";
+};
+
+/* * * * * * * * * * * * * * * * * * * */
 
 const AVATAR_COUNT = 640;
 
@@ -17,7 +42,9 @@ var fetchAvatar = function()
 {
   $.get("random_avatar", function(data, status){
     
-    console.log("received = " + data);
+    var avatar = JSON.parse(data); // parse out avatar object
+    console.log("received => " + data);
+    
     DOM_avatar_icon.setAttribute('src', data);
     
    // var el = document.createElement("IMG");
@@ -39,7 +66,5 @@ window.addEventListener('load', (event) =>
   DOM_avatar_name = document.getElementById("avatar-name");
   DOM_avatar_location = document.getElementById("avatar-location");
   
-//for(var i = 0; i < AVATAR_COUNT; i++)
-  //  addAvatar();
   fetchAvatar();
 });

@@ -92,7 +92,7 @@ function parse_avatar_info($, info_container, info){
   return info;
 }
 
-async function scrape_model(model)
+async function scrape_model(model, avatar)
 {
   console.log("scrape = " + model);
   var PATH = ROOT + model;
@@ -100,11 +100,14 @@ async function scrape_model(model)
   const $ = await fetchHTML(PATH);
   
   var information = Object.create(Avatar_Info.prototype);
+  var thumbnail = "";
   
   const info = $("#game-info-wrapper").first();
   
-  const name = info.find($('.rowheader')).each((i, el) => {
-    console.log(el);
+  const name = info.find($('.rowheader')).find($('div')).filter((i, el) => {
+    return $(el).attr('title');
+  }).each((i, el) => {
+    information.name = $(el).attr('title');
   });
   
   const categories = info.find($('tr')).filter((i, el) => {
@@ -123,7 +126,15 @@ async function scrape_model(model)
     
   });
   
+  const icon = $('.bigiconbody').find($('img')).each((i, el) => {
+    thumbnail = $(el).attr('src');
+  });
+  
+  
   if(information) information.print();
+  
+  avatar.info = information;
+  avatar.thumbnail = thumbnail;
 }
 
 
@@ -162,10 +173,18 @@ app.get("/random_avatar", async function(request, response)
     console.log("Found " + MODELS_ROOT.length + " models in ROOT!");
   
     var model = MODELS_ROOT[random.int(0, MODELS_ROOT.length)];
-    await scrape_model(model);
+    var avatar = Object.create(Avatar.prototype);
   
+    await scrape_model(model, avatar);
   
-    response.send("");
+    var thumbnail = avatar.thumbnail;
+    if(thumbnail != "")
+      avatar.thumbnail = ROOT + thumbnail;
+  
+    const payload = JSON.stringify(avatar);
+    console.log(payload);
+  
+    response.send(payload);
     return;
   
     if(avatars.length == 0)
