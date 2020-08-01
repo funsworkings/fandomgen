@@ -44,26 +44,34 @@ const PATH = ROOT + "/" + process.env.SRC_PATH;
 
 
 
-var CONSOLES = [];
+var MODELS_ROOT = [];
 
 
-async function scrape_consoles() 
+async function scrape_root() 
 {
-  console.log("SCRAPE CONSOLES!");
-  
    const $ = await fetchHTML(ROOT);
    $('a').filter(function(){
-     var innerhtml = $(this).html();
-     var innerhtml_format = innerhtml.toLowerCase().replace(' ', '_');
+     //var innerhtml = $(this).html();
+     //var innerhtml_format = innerhtml.toLowerCase().replace(' ', '_');
      
      var href = $(this).attr('href');
-     console.log(href);
-     
-     return (innerhtml_format == href);
+     return (href.includes("/model/"));
    }).each(function(){
      var href = $(this).attr('href');
-     console.log(href);
+     MODELS_ROOT.push(href);
    });
+}
+
+async function scrape_model(model)
+{
+  console.log("scrape = " + model);
+  var PATH = ROOT + model;
+  
+  const $ = await fetchHTML(PATH);
+  
+  const icon = $("#game-info-wrapper").first().children(".bigiconbody").first();
+  
+  console.log(icon.html());
 }
 
 
@@ -98,7 +106,13 @@ app.get("/", (request, response) =>
 
 app.get("/random_avatar", async function(request, response)
 {
-    await scrape_consoles();
+    await scrape_root();
+    console.log("Found " + MODELS_ROOT.length + " models in ROOT!");
+  
+    var model = MODELS_ROOT[random.int(0, MODELS_ROOT.length)];
+    await scrape_model(model);
+  
+  
     response.send("");
     return;
   
