@@ -227,7 +227,7 @@ async function read_avatar()
         assets.push(path);
         entry.pipe(fs.createWriteStream(__dirname + '/tmp/' + path));
         
-        console.log("wrote= " + path);
+        console.log("wrote= " + fileName);
       }
       else
         entry.autodrain();
