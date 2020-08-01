@@ -163,33 +163,33 @@ async function scrape_model(model, avatar)
   avatar.zip = zipfile;
 }
 
-async function scrape_avatar(avatar) {
+function scrape_avatar(avatar) {
+  
+  return new Promise( async (resolve, reject) => {
+  
   var zip = avatar.zip;
   if(zip && zip != ""){
     
-    var unzipped = [];
-    unzipped = new Promise( async (res, rej) => {
-    
-        request
-        .get(zip)
-        .on('error', function(error) {
-          console.log("zip err= " + error);
-        })
-        .pipe(fs.createWriteStream(__dirname + '/tmp/avi.zip'))
-        .on('finish', function() 
-        {
-            console.log("complete write= " + zip);
-            return new Promise( async(res, rej) => 
-            {
-              var assets = await read_avatar();
-              res(assets);
-            });
-        });
+    request
+    .get(zip)
+    .on('error', function(error) {
+      console.log("zip err= " + error);
+      reject(error);
+    })
+    .pipe(fs.createWriteStream(__dirname + '/tmp/avi.zip'))
+    .on('finish', async function() 
+    {
+        console.log("complete write= " + zip);
       
+        var assets = await read_avatar();
+        avatar.assets = assets;
+      
+        resolve(avatar);
     });
-    
-    avatar.assets = unzipped;
+      
   }
+    
+  });
 }
 
 async function read_avatar()
@@ -205,14 +205,18 @@ async function read_avatar()
       console.log(fileName);
       assets.push(fileName);
       
-      entry.autodrain();
-      continue;
-      
-      if (fileName === "this IS the file I'm looking for") {
-        entry.pipe(fs.createWriteStream('output/path'));
-      } else {
-        entry.autodrain();
+      if(fileName.includes(".png"))
+      {
+        var path_s = fileName.split('/');
+        var path = path_s[path_s.length-1];
+        
+        entry.pipe(fs.createWriteStream(__dirname + '/tmp/' + path));
+        console.log("wrote=" + fileName);
       }
+      else
+        entry.autodrain();
+        
+      continue;
     }
     
     return assets;
@@ -265,7 +269,7 @@ app.get("/random_avatar", async function(request, response)
     if(zip != "")
       avatar.zip = ROOT + zip;
   
-    await scrape_avatar(avatar); // unzip contents
+    avatar = await scrape_avatar(avatar); // unzip contents
   
     const payload = JSON.stringify(avatar);
     console.log(payload);
