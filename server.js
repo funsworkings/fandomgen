@@ -41,8 +41,10 @@ Avatar_Info.prototype.print = function(){
 const Avatar = function()
 {
   this.info = Object.create(Avatar_Info.prototype);
+  
   this.thumbnail = "";
   this.zip = "";
+  this.assets = [];
 };
 
 
@@ -50,6 +52,7 @@ const Avatar = function()
 // https://expressjs.com/en/starter/static-files.html
 app.use(express.static("public"));
 app.use(express.static("js"));
+app.use(express.static("tmp"));
 
 async function fetchHTML(url) {
   const { data } = await axios.get(url)
@@ -160,26 +163,39 @@ async function scrape_model(model, avatar)
   avatar.zip = zipfile;
 }
 
-async function write_avatar(avatar) {
+async function scrape_avatar(avatar) {
   var zip = avatar.zip;
   if(zip && zip != ""){
     
-    request
-    .get(zip)
-    .on('error', function(error) {
-      console.log("zip err= " + error);
-    })
-    .pipe(fs.createWriteStream(__dirname + '/tmp/avi.zip'))
-    .on('finish', function() 
-    {
-        console.log("complete write= " + zip);
-        read_avatar();
+    var unzipped = [];
+    unzipped = new Promise( async (res, rej) => {
+    
+        request
+        .get(zip)
+        .on('error', function(error) {
+          console.log("zip err= " + error);
+        })
+        .pipe(fs.createWriteStream(__dirname + '/tmp/avi.zip'))
+        .on('finish', function() 
+        {
+            console.log("complete write= " + zip);
+            return new Promise( async(res, rej) => 
+            {
+              var assets = await read_avatar();
+              res(assets);
+            });
+        });
+      
     });
+    
+    avatar.assets = unzipped;
   }
 }
 
 async function read_avatar()
 {
+    var assets = [];
+  
     const extract = fs.createReadStream(__dirname + '/tmp/avi.zip').pipe(unzip.Parse({forceStream: true}));
     for await (const entry of extract) {
       const fileName = entry.path;
@@ -187,6 +203,8 @@ async function read_avatar()
       const size = entry.vars.uncompressedSize; // There is also compressedSize;
       
       console.log(fileName);
+      assets.push(fileName);
+      
       entry.autodrain();
       continue;
       
@@ -196,6 +214,8 @@ async function read_avatar()
         entry.autodrain();
       }
     }
+    
+    return assets;
 }
 
 async function scrape(){
@@ -245,7 +265,7 @@ app.get("/random_avatar", async function(request, response)
     if(zip != "")
       avatar.zip = ROOT + zip;
   
-    await write_avatar(avatar); // unzip contents
+    await scrape_avatar(avatar); // unzip contents
   
     const payload = JSON.stringify(avatar);
     console.log(payload);
