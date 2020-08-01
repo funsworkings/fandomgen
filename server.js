@@ -350,9 +350,31 @@ async function scrape_wiki(wiki, avatar)
     var results = $('.Results').first();
     if(results){
       var _results = $(results).find($('.result'))
-      .find($('img')).each((i, el) => {
+      .find($('.thumbimage')).each((i, el) => {
           var src = $(el).attr('src');
-          console.log('fandom src= ' + src);
+        
+          var push = false;
+          var ind = -1;
+          
+          ind = src.indexOf(".png");
+          if(ind > -1)
+          {
+             push = true;
+          }
+          else
+          {
+            ind = src.indexOf(".jpg");
+            if(ind > -1)
+              push = true;
+          }
+        
+          if(push)
+          {
+            src = src.substr(0, ind+4); // Append extension
+            
+            console.log('fandom src= ' + src);
+            avatar.assets.push(src);
+          }
       });
     }
   }
