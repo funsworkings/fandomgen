@@ -14,10 +14,17 @@ const cheerio = require("cheerio");
 const request = require("superagent");
 
 
+const ROOT = process.env.SRC_ROOT;
+const PATH = ROOT + "/" + process.env.SRC_PATH;
+const TMP = path.join(__dirname, "tmp");
+
+
+
 var dir = './tmp'; // Setup temp directory
-if (!fs.existsSync(dir)){
+if (!fs.existsSync(dir))
     fs.mkdirSync(dir);
-}
+else
+  wipe_temp();
 
 
 var avatars = [];
@@ -59,9 +66,19 @@ async function fetchHTML(url) {
   return cheerio.load(data)
 }
 
-const ROOT = process.env.SRC_ROOT;
-const PATH = ROOT + "/" + process.env.SRC_PATH;
+function wipe_temp(){
+  fs.readdir(TMP, (err, files) => {
+    if (err) throw err;
 
+    for (const file of files) {
+      fs.unlink(path.join(TMP, file), err => 
+      {
+          if (err) throw err;
+          console.log("wipe= " + file);
+      });
+    }
+  });
+}
 
 
 var MODELS_ROOT = [];
@@ -221,28 +238,10 @@ async function read_avatar()
     return assets;
 }
 
-async function scrape(){
-  
-  avatars = []; // wipe avatars on scrape
-  
-  const $ = await fetchHTML(PATH);
 
-  $('img').filter(function(i)
-  {
-    return $(this).attr("src").includes("sheet_icons");
-  }).each(function(i, element){
-    var src = $(element).attr("src");
-    //console.log(src);
 
-    avatars.push(ROOT + src);
-  });
-  
-  // Print the full HTML
-  //console.log(`Site HTML: ${$.html()}\n\n`)
+// ROUTES!
 
-  // Print some specific page content
-  //console.log(`First h1 tag: ${$('h1').text()}`)
-}
 
 // https://expressjs.com/en/starter/basic-routing.html
 app.get("/", (request, response) => 
@@ -252,6 +251,8 @@ app.get("/", (request, response) =>
 
 app.get("/random_avatar", async function(request, response)
 {
+    wipe_temp();
+  
     await scrape_root();
     console.log("Found " + MODELS_ROOT.length + " models in ROOT!");
   
@@ -274,16 +275,6 @@ app.get("/random_avatar", async function(request, response)
     console.log(payload);
   
     response.send(payload);
-    return;
-  
-    if(avatars.length == 0)
-    await scrape();
-    
-    var ind = random.int(0, avatars.length);
-    var avi = avatars[ind];
-  
-    console.log("sent = " + avi);
-    response.send(avi);
 });
 
 // listen for requests :)
