@@ -11,6 +11,13 @@ const fs = require("fs");
 const unzip = require("unzipper");
 const axios = require("axios");
 const cheerio = require("cheerio");
+const request = require("superagent");
+
+
+var dir = './tmp'; // Setup temp directory
+if (!fs.existsSync(dir)){
+    fs.mkdirSync(dir);
+}
 
 
 var avatars = [];
@@ -153,10 +160,27 @@ async function scrape_model(model, avatar)
   avatar.zip = zipfile;
 }
 
-async function extract_avatar(avatar) {
+async function write_avatar(avatar) {
   var zip = avatar.zip;
   if(zip && zip != ""){
-    const extract = fs.createReadStream(zip).pipe(unzip.Parse({forceStream: true}));
+    
+    request
+    .get(zip)
+    .on('error', function(error) {
+      console.log("zip err= " + error);
+    })
+    .pipe(fs.createWriteStream(__dirname + '/tmp/avi.zip'))
+    .on('finish', function() 
+    {
+        console.log("complete write= " + zip);
+        read_avatar();
+    });
+  }
+}
+
+async function read_avatar()
+{
+    const extract = fs.createReadStream(__dirname + '/tmp/avi.zip').pipe(unzip.Parse({forceStream: true}));
     for await (const entry of extract) {
       const fileName = entry.path;
       const type = entry.type; // 'Directory' or 'File'
@@ -172,9 +196,7 @@ async function extract_avatar(avatar) {
         entry.autodrain();
       }
     }
-  }
 }
-
 
 async function scrape(){
   
@@ -223,7 +245,7 @@ app.get("/random_avatar", async function(request, response)
     if(zip != "")
       avatar.zip = ROOT + zip;
   
-    await extract_avatar(avatar); // unzip contents
+    await write_avatar(avatar); // unzip contents
   
     const payload = JSON.stringify(avatar);
     console.log(payload);
