@@ -69,9 +69,13 @@ async function scrape_model(model)
   
   const $ = await fetchHTML(PATH);
   
-  const icon = $("#game-info-wrapper").first().children(".bigiconbody").first();
   
-  console.log(icon.html());
+  const info = $("#game-info-wrapper").first();
+  const categories = info.find($('tr')).each(() => {
+    console.log($(this));
+  });
+  
+  
 }
 
 
