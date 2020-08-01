@@ -8,6 +8,7 @@ const path = require("path");
 const random = require("random");
 const app = express();
 const fs = require("fs");
+const unzip = require("unzipper");
 const axios = require("axios");
 const cheerio = require("cheerio");
 
@@ -34,6 +35,7 @@ const Avatar = function()
 {
   this.info = Object.create(Avatar_Info.prototype);
   this.thumbnail = "";
+  this.zip = "";
 };
 
 
@@ -102,6 +104,7 @@ async function scrape_model(model, avatar)
   
   var information = Object.create(Avatar_Info.prototype);
   var thumbnail = "";
+  var zipfile = "";
   
   const info = $("#game-info-wrapper").first();
   
@@ -130,12 +133,46 @@ async function scrape_model(model, avatar)
   const icon = $('.bigiconbody').find($('img')).each((i, el) => {
     thumbnail = $(el).attr('src');
   });
+
+  const zip = $('a').filter((i, el) => {
+    var link = $(el).attr('href');
+    if(link)
+      return link.includes("/download/");
+    
+    return false;
+  }).each((i, el) => {
+    var link = $(el).attr('href');
+    zipfile = link;
+  });
   
   
   if(information) information.print();
   
   avatar.info = information;
   avatar.thumbnail = thumbnail;
+  avatar.zip = zipfile;
+}
+
+async function extract_avatar(avatar) {
+  var zip = avatar.zip;
+  if(zip && zip != ""){
+    const extract = fs.createReadStream(zip).pipe(unzip.Parse({forceStream: true}));
+    for await (const entry of extract) {
+      const fileName = entry.path;
+      const type = entry.type; // 'Directory' or 'File'
+      const size = entry.vars.uncompressedSize; // There is also compressedSize;
+      
+      console.log(fileName);
+      entry.autodrain();
+      continue;
+      
+      if (fileName === "this IS the file I'm looking for") {
+        entry.pipe(fs.createWriteStream('output/path'));
+      } else {
+        entry.autodrain();
+      }
+    }
+  }
 }
 
 
@@ -181,6 +218,12 @@ app.get("/random_avatar", async function(request, response)
     var thumbnail = avatar.thumbnail;
     if(thumbnail != "")
       avatar.thumbnail = ROOT + thumbnail;
+  
+    var zip = avatar.zip;
+    if(zip != "")
+      avatar.zip = ROOT + zip;
+  
+    await extract_avatar(avatar); // unzip contents
   
     const payload = JSON.stringify(avatar);
     console.log(payload);

@@ -24,6 +24,7 @@ const Avatar = function()
 {
   this.info = Object.create(Avatar_Info.prototype);
   this.thumbnail = "";
+  this.zip = "";
 };
 
 /* * * * * * * * * * * * * * * * * * * */
