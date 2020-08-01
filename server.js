@@ -25,6 +25,10 @@ const Avatar_Info = function()
   this.comments = "";
 }
 
+Avatar_Info.prototype.print = function(){
+  console.log("name= " + this.name + "  game= " + this.game + "  filesize= " + this.filesize + "  hits=" + this.hits);
+}
+
 const Avatar = function()
 {
   this.info = Object.create(Avatar_Info.prototype);
@@ -66,21 +70,26 @@ async function scrape_root()
 }
 
 
-function parse_avatar_info($, info_container){
-  var info = Object.create(Avatar_Info.prototype);
-  
+function parse_avatar_info($, info_container, info){
   info_container.each((i, el) => {
       
       var html = $(el).html();
       if(html == "Game")
       {
-        html = $(el).next().html();
-        console.log(html + "!");
+        html = $(el).next().find($('a')).html();
+        info.game = html;
       }
-      
+      else if(html == "Filesize"){
+        html = $(el).next().html();
+        info.filesize = html;
+      }
+      else if(html == "Hits"){
+        html = $(el).next().html();
+        info.hits = html;
+      }
   });
   
-  return "";
+  return info;
 }
 
 async function scrape_model(model)
@@ -90,6 +99,7 @@ async function scrape_model(model)
   
   const $ = await fetchHTML(PATH);
   
+  var information = Object.create(Avatar_Info.prototype);
   
   const info = $("#game-info-wrapper").first();
   const categories = info.find($('tr')).filter((i, el) => {
@@ -100,14 +110,15 @@ async function scrape_model(model)
     
     return false;
     
-  }).each((i, el) => {
+  }).each((i, el) => 
+  {
     
     var children = $(el).find('td');
-    var info = parse_avatar_info($, children);
+    parse_avatar_info($, children, information);
     
   });
   
-  
+  if(information) information.print();
 }
 
 
