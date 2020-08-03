@@ -1,0 +1,72 @@
+<!-- This is a static file -->
+<!-- served from your routes in server.js -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="simgen fansite">
+
+    <title>Welcome to Glitch!</title>
+
+    <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="/style.css">
+
+    <!-- import the webpage's client-side javascript file -->
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" defer></script>
+    <script type="module" src="/threejs_helpers.js"></script>
+
+    <script type="module" src="/index.js" defer></script>
+    <script type="module" src="/scene.js" defer></script>
+  </head>
+  <body>  
+    <img class="backdrop">
+    
+    <header>
+      <div class="header-items center-column light-backdrop">
+        <div class="header-title center-column">
+          <h1>☊ fandomgen ☋</h1>
+          <h3> 
+            -generative fansite<br>
+            -adore new heroes every min<br>
+            -observe their natural stasis
+          </h3>
+        </div>
+        
+        <img class="grayscale" src="https://cdn.glitch.com/9e86cccd-74b9-41a9-8f8a-8e687849bad2%2FNEWam_flag.gif?v=1596215015292">
+      </div>
+      
+    </header>
+
+    <div class="main-content center-column">
+      <div id= "avatar-items" class="main-items light-backdrop">
+        
+        <div id="avatar-backdrop" class="avatar-backdrop fill"></div>
+        
+        <div class="avatar-profile">
+          
+          <img id="avatar-icon" class="avatar-profile-icon debug">
+          
+          <div class="avatar-profile-bio">
+              <h3 id="avatar-name" class="avatar-profile-bio-item debug">NAME = ???</h3>
+              <h3 id="avatar-location" class="avatar-profile-bio-item debug">LOCALE = ????</h3>  
+          </div>
+          
+        </div>
+        
+        <div id="gallery" class="avatar-gallery"></div>
+        <div id="avatar-scene" class="avatar-scene"></div>
+      </div>
+    </div>
+
+    <footer class="light-backdrop">
+      <small>
+        [ made for eternal labs day 073120 ]<br>
+        [ assets sourced from <a href="https://www.models-resource.com/">models-resource</a> ]
+      </small>
+    </footer>
+  </body>
+</html>

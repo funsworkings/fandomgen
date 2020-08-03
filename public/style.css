@@ -1,0 +1,218 @@
+/* this file is loaded by index.html and styles the page */
+
+
+@font-face {
+  font-family: DusterAB;
+  src: url("https://cdn.glitch.com/9e86cccd-74b9-41a9-8f8a-8e687849bad2%2FDuster%20Regular.ttf?v=1596217777007");
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  
+  padding : 0 !important;
+  margin: 0 !important;
+  line-height: 0;
+}
+
+.backdrop {
+  width: 100%;
+  height: 100%;
+  
+  position: fixed;
+  top: 0; left: 0;
+  
+  background-image: url("https://cdn.glitch.com/9e86cccd-74b9-41a9-8f8a-8e687849bad2%2FScreen%20Shot%202020-07-31%20at%201.33.48%20PM.png?v=1596216972756");
+  background-size: cover;
+  
+  z-index: -99 !important;
+}
+
+.avatar-gallery {
+  width: 100%;
+  height: auto;
+}
+
+.avatar-item {
+  width: 96px;
+  height: 96px;
+}
+
+header {
+  width:100%;
+  margin: 0 auto;
+  height: auto;
+  
+  display: flex;
+  justify-content: center;
+}
+
+.center-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.center-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-items {
+  width: 100%;
+  max-width: 640px;
+
+  height: auto;
+  
+  padding: 24px 0px;
+}
+
+.header-title {
+  text-align: center;
+  padding: 24px 0;
+  
+  width: 75%;
+  max-width: 640px;
+  
+  height: auto;
+}
+
+.header-title h3 {
+  text-align: justify !important;
+  text-justify: inter-word;
+  line-height: .9em;
+}
+
+h1 {
+  font-family: DusterAB;
+  font-size: 5em;
+  font-style: bold;
+  color: lightgreen;
+  max-width: calc(100% - 5rem);
+}
+
+h3 {
+  font-style: normal;
+  font-weight: normal;
+  
+  color: lightyellow;
+}
+
+.main-content
+{
+   width: 100%;
+   height: auto;
+  
+   margin-top: 32px;
+}
+
+.main-items 
+{
+  width: 87%;
+  max-width: 640px;
+  
+  height: auto;
+  
+  padding: 32px;
+}
+
+footer {
+  width:100%;
+  height: auto;
+  
+  margin-top: 3em;
+  padding: 1em;
+  
+  text-align: center;
+  line-height: 1em;
+  
+  color: lightyellow;
+  border-top: 1px solid lightgrey;
+}
+
+.small_img {
+  width: 64px !important;
+  height: 64px !important;
+}
+
+.grayscale
+{
+  filter: grayscale(100%);
+}
+
+.light-backdrop{
+  background-color: rgba(255, 255, 255, .167);
+  backdrop-filter: blur(5px);
+}
+
+.debug {
+  background-color: blue;
+}
+
+.debug-red {
+  background-color: red;
+}
+
+.fill {
+  position: absolute;
+  top:0;
+  left:0;
+  width: 100%;
+  height: 100%;
+}
+
+.avatar-profile{
+  width: 100%;
+  height: auto;
+  
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.avatar-profile-icon {
+  width: 256px;
+  height: 256px;
+}
+
+.avatar-profile-bio {
+  margin-left: 32px;
+  
+  width: auto;
+  height: auto;
+  
+  flex: 1;
+}
+
+.avatar-backdrop {
+  z-index: -9;
+}
+
+.avatar-profile-bio-item 
+{
+   width: 100%;
+   height: auto;
+  
+   line-height: 1em;
+   padding: 16px 8px;
+}
+
+.avatar-scene 
+{
+  margin-top: 32px;
+
+  width: 100%;
+  height: 480px;
+}
+
+.avatar-scene canvas 
+{
+  width: 100%;
+  height: 100%;
+}
