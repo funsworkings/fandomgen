@@ -14,6 +14,7 @@ const cheerio = require("cheerio");
 const etl = require("etl");
 const request = require("superagent");
 const { on } = require("process");
+const cors = require("cors");
 const dotenv = require('dotenv').config();
 
 
@@ -140,6 +141,7 @@ app.use(express.static("node_modules"));
 app.use('/lib', express.static("lib"));
 app.use('/tmp', express.static("tmp"));
 
+app.use(cors()); // CORS ERR BYPASS
 
 async function fetchHTML(url) {
   console.log("fetch= " + url);
