@@ -75,26 +75,16 @@ const import_avatar = function(avatar)
 
     if(thumbnail)
     {
-        THREE.ImageUtils.crossOrigin = '';
-        var tex = THREE.ImageUtils.loadTexture(thumbnail);
-
-        //var loader = new THREE.TextureLoader();
-        //loader.setCrossOrigin("");
-
-        var geometry = new THREE.PlaneGeometry( 5, 20, 32 );
-        var material = new THREE.MeshBasicMaterial( {color: 0xffffff, side: THREE.DoubleSide, map: tex} );
-        var plane = new THREE.Mesh( geometry, material );
-
-        scene.add(plane);
-
-        /*
+        var loader = new THREE.TextureLoader();
+        loader.setCrossOrigin("anonymous");
+        
         loader.load(thumbnail, function(tex){
             var geometry = new THREE.PlaneGeometry( 5, 20, 32 );
             var material = new THREE.MeshBasicMaterial( {color: 0xffffff, side: THREE.DoubleSide, map: tex} );
             var plane = new THREE.Mesh( geometry, material );
 
             scene.add(plane);
-        })*/
+        })
     }
 }
 
