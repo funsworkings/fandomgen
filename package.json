@@ -1,0 +1,37 @@
+{
+  "//1": "describes your app and its dependencies",
+  "//2": "https://docs.npmjs.com/files/package.json",
+  "//3": "updating this file will download and update your packages",
+  "name": "hello-express",
+  "version": "0.0.1",
+  "description": "A simple Node app built on Express, instantly up and running.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "cheerio": "^0.22.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "etl": "^0.6.12",
+    "express": "^4.17.1",
+    "path": "^0.12.7",
+    "random": "^2.2.0",
+    "superagent": "^5.3.1",
+    "three": "^0.119.1",
+    "unzipper": "^0.10.11"
+  },
+  "engines": {
+    "node": "12.x"
+  },
+  "repository": {
+    "url": "https://glitch.com/edit/#!/hello-express"
+  },
+  "license": "MIT",
+  "keywords": [
+    "node",
+    "glitch",
+    "express"
+  ]
+}
