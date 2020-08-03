@@ -17,7 +17,7 @@ const { on } = require("process");
 const dotenv = require('dotenv').config();
 
 
-const PORT = 3000;
+const PORT = process.env.PORT;
 
 const ROOT = process.env.SRC_ROOT;
 const PATH = ROOT + "/" + process.env.SRC_PATH;
