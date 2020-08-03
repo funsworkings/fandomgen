@@ -309,7 +309,7 @@ async function read_avatar(avatar)
         const type = entry.type; // 'Directory' or 'File'
         const size = entry.vars.uncompressedSize; // There is also compressedSize;
         
-        if(type == 'File' && fileName.includes(".png") || fileName.includes(".jpg"))
+        if(type == 'File')
         {
           var path_s = fileName.split('\/');
           var path = path_s[path_s.length-1];

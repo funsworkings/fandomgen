@@ -82,8 +82,6 @@ var fetchAvatar = function()
         DOM_avatar_gallery.appendChild(el);
       }
     }
-    
-    import_avatar(avatar);
 
     assets = avatar.meshes;
     var materials = avatar.materials;
