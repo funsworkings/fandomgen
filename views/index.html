@@ -17,11 +17,10 @@
     <!-- import the webpage's client-side javascript file -->
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" defer></script>
-    <script src="/index.js" defer></script>
-    <!--<script src="/sims.js" defer></script>
-    <script src="/generator.js" defer></script>
-    
-    <script src="/helpers.js"></script>-->
+    <script type="module" src="/threejs_helpers.js"></script>
+
+    <script type="module" src="/index.js" defer></script>
+    <script type="module" src="/scene.js" defer></script>
   </head>
   <body>  
     <img class="backdrop">
@@ -59,6 +58,7 @@
         </div>
         
         <div id="gallery" class="avatar-gallery"></div>
+        <div id="avatar-scene" class="avatar-scene"></div>
       </div>
     </div>
 

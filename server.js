@@ -11,8 +11,13 @@ const fs = require("fs");
 const unzip = require("unzipper");
 const axios = require("axios");
 const cheerio = require("cheerio");
+const etl = require("etl");
 const request = require("superagent");
+const { on } = require("process");
+const dotenv = require('dotenv').config();
 
+
+const PORT = 3000;
 
 const ROOT = process.env.SRC_ROOT;
 const PATH = ROOT + "/" + process.env.SRC_PATH;
@@ -54,7 +59,10 @@ const Avatar = function()
   
   this.thumbnail = "";
   this.zip = "";
-  this.assets = [];
+
+  this.images = [];
+  this.meshes = [];
+  this.materials = [];
 };
 
 Avatar.prototype.isvalid = function()
@@ -128,9 +136,14 @@ function convert_to_query(str){
 // https://expressjs.com/en/starter/static-files.html
 app.use(express.static("public"));
 app.use(express.static("js"));
+app.use(express.static("node_modules"));
+app.use('/lib', express.static("lib"));
 app.use('/tmp', express.static("tmp"));
 
+
 async function fetchHTML(url) {
+  console.log("fetch= " + url);
+
   const { data } = await axios.get(url)
   return cheerio.load(data)
 }
@@ -253,58 +266,90 @@ function scrape_avatar(avatar) {
   
   return new Promise( async (resolve, reject) => {
   
-  var zip = avatar.zip;
-  if(zip && zip != ""){
-    
-    request
-    .get(zip)
-    .on('error', function(error) {
-      console.log("zip err= " + error);
-      reject(error);
-    })
-    .pipe(fs.createWriteStream(__dirname + '/tmp/avi.zip'))
-    .on('finish', async function() 
-    {
-        console.log("complete write= " + zip);
+    var zip = avatar.zip;
+    if(zip && zip != ""){
       
-        var assets = await read_avatar();
-        avatar.assets = assets;
-      
-        resolve(avatar);
-    });
+      request
+      .get(zip)
+      .on('error', function(error) {
+        console.log("zip err= " + error);
+        reject(error);
+      })
+      .pipe(fs.createWriteStream(__dirname + '/tmp/avi.zip'))
+      .on('finish', async function() 
+      {
+          console.log("complete write= " + zip);
+        
+          await read_avatar(avatar);
+          resolve(avatar);
+      });
       
   }
     
   });
 }
 
-async function read_avatar()
+async function read_avatar(avatar)
 {
-    var assets = [];
-  
-    const extract = fs.createReadStream(__dirname + '/tmp/avi.zip').pipe(unzip.Parse({forceStream: true}));
-    for await (const entry of extract) {
-      const fileName = entry.path;
-      const type = entry.type; // 'Directory' or 'File'
-      const size = entry.vars.uncompressedSize; // There is also compressedSize;
-      
-      if(fileName.includes(".png") || fileName.includes(".jpg"))
+  var images = [];
+  var meshes = [];
+  var materials = [];
+
+  return new Promise(async (resolve, reject) => 
+  {
+    var write_queue = [];
+
+    fs.createReadStream(__dirname + '/tmp/avi.zip')
+      .pipe(unzip.Parse())
+      .pipe(etl.map( entry => 
       {
-        var path_s = fileName.split('\/');
-        var path = path_s[path_s.length-1];
+        const fileName = entry.path;
+        const type = entry.type; // 'Directory' or 'File'
+        const size = entry.vars.uncompressedSize; // There is also compressedSize;
         
-        assets.push(path);
-        entry.pipe(fs.createWriteStream(__dirname + '/tmp/' + path));
+        if(type == 'File' && fileName.includes(".png") || fileName.includes(".jpg"))
+        {
+          var path_s = fileName.split('\/');
+          var path = path_s[path_s.length-1];
+
+          if(fileName.includes(".png") || fileName.includes(".jpg"))
+          {
+            console.log("img= " + path);
+            images.push(path);
+          }
+          else if(fileName.includes(".obj") || fileName.includes(".dae") || fileName.includes(".fbx"))
+          {
+            console.log("mesh= " + path);
+            meshes.push(path);
+          }
+          else if(fileName.includes(".mtl"))
+          {
+            console.log("mat= " + path);
+            materials.push(path);
+          }
+
+          return entry
+            .pipe(etl.toFile(__dirname + '/tmp/' + path))
+            .promise();
+        }
+        else
+          entry.autodrain();
+
+      }))
+      .on('finish', () => 
+      {
+        console.log('done');
+
+        avatar.images = images;
+        avatar.meshes = meshes;
+        avatar.materials = materials;
         
-        console.log("wrote= " + fileName);
-      }
-      else
-        entry.autodrain();
-        
-      continue;
-    }
-    
-    return assets;
+        resolve();
+      })
+      .on('error', (err) => {
+        reject(err);
+      })
+  });
 }
 
 async function fetch_wiki(avatar)
@@ -373,7 +418,7 @@ async function scrape_wiki(wiki, avatar)
             src = src.substr(0, ind+4); // Append extension
             
             console.log('fandom src= ' + src);
-            avatar.assets.push(src);
+            avatar.images.push(src);
           }
       });
     }
@@ -392,6 +437,7 @@ app.get("/", (request, response) =>
 app.get("/random_avatar", async function(request, response)
 {
     wipe_temp();
+    console.log('try');
   
     await scrape_root();
     console.log("Found " + MODELS_ROOT.length + " models in ROOT!");
@@ -413,6 +459,7 @@ app.get("/random_avatar", async function(request, response)
   
     avatar = await scrape_avatar(avatar); // unzip contents
     CURRENT_AVATAR = avatar;
+
   
     if(CURRENT_AVATAR)
     {
@@ -435,6 +482,6 @@ app.get("/random_avatar", async function(request, response)
 
 
 // listen for requests :)
-const listener = app.listen(process.env.PORT, () => {
+const listener = app.listen(PORT, () => {
   console.log("Your app is listening on port " + listener.address().port);
 });

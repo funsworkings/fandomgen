@@ -202,3 +202,17 @@ footer {
    line-height: 1em;
    padding: 16px 8px;
 }
+
+.avatar-scene 
+{
+  margin-top: 32px;
+
+  width: 100%;
+  height: 480px;
+}
+
+.avatar-scene canvas 
+{
+  width: 100%;
+  height: 100%;
+}
